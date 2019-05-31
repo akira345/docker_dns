@@ -1,8 +1,11 @@
-unbound:
-  build: ./
-  ports:
-    - "192.168.xxx.xxx:53:53"
-    - "192.168.xxx.xxx:53:53/udp"
-  volumes:
-    - "$PWD/conf:/conf:ro"
-  restart: always
+version: '2'
+
+services:
+  unbound:
+    restart: always
+    image: akira345/unbound:latest
+    ports:
+      - "192.168.xxx.xxx:53:53"
+      - "192.168.xxx.xxx:53:53/udp"
+    volumes:
+      - "$PWD/conf:/conf:ro"
