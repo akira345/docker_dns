@@ -1,9 +1,9 @@
 FROM ubuntu:18.04
 
 RUN apt-get -y update && apt-get -y install aptitude \
-    && aptitude -y install unbound ¥
+    && aptitude -y install unbound \
     && rm -r /var/lib/apt/lists/*
-RUN mkdir -p /var/unbound/var/log ¥
+RUN mkdir -p /var/unbound/var/log \
     && chown unbound:unbound /var/unbound/var/log
 
 ENTRYPOINT ["unbound"]
