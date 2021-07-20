@@ -1,6 +1,12 @@
 #
 # https://qiita.com/kawakawaryuryu/items/b0291c1bc1141a535263#set-up-docker-buildx より
 #
+# セットするシークレット
+# DOCKERHUB_USERNAME: DockerHub ユーザ名
+# DOCKERHUB_PASSWORD: DockerHub パスワード
+# DOCKER_IMAGENAME: Dockerイメージ名
+#
+
 name: Build and Publish Docker
 
 on:
@@ -10,13 +16,12 @@ on:
       - main
 
   schedule:
-    - cron: '0 0 1 * *'
+    - cron: "0 0 1 * *"
 
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: testapp
+
     steps:
       - name: Extract branch name
         shell: bash
@@ -34,7 +39,7 @@ jobs:
       - name: Login to DockerHub Container Registry
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and push(latest)
@@ -44,7 +49,7 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}:latest
 
       - name: Build and push(release-${{ env.BRANCH_NAME }})
         if: (!(contains(github.ref, 'main') || contains(github.ref, 'master')))
@@ -53,5 +58,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:release-${{ env.BRANCH_NAME }}
-
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}:release-${{ env.BRANCH_NAME }}
